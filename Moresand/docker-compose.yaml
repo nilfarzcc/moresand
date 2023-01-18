@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  nginx_reverse:
+    build: 
+      context: ./nginx
+      dockerfile: nginx.dockerfile
+    container_name: nginx_reverse_proxy
+    ports:
+     - '80:80'
+    networks:
+      - default
+
+  node-hello:
+    build:
+      context: ./nodejs
+      dockerfile: nodejs.dockerfile
+    container_name: hello_world_node
+    ports:
+     - '8080:8080'
+    networks:
+      - default
+
+  mysql:
+    build:
+      context: ./mysql
+      dockerfile: mysql.dockerfile
+    container_name: mysql8.0
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: 'initdb'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: '12345678'
+      MYSQL_ROOT_PASSWORD: '12341234'
+    volumes:
+      - mysql8.0:/var/lib/mysql
+    networks:
+      - default  
+
+volumes:
+  mysql8.0:
